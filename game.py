@@ -159,6 +159,7 @@ class Game:
         self.snake.update()
         
         if self.snake.position == self.strawberry.position:
+            pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/eat.mp3'))
             if self.strawberry.style == '3':
                 self.snake.score += 1
             self.strawberry.random_pos(self.snake)
