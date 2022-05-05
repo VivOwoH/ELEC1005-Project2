@@ -90,7 +90,7 @@ class Strawberry():
         
     def random_pos(self, snake):
         self.style = str(random.randint(1, 8))
-        self.image = pygame.image.load('images/food' + str(self.style) + '.bmp')                
+        self.image = pygame.image.load('images/food' + str(self.style) + '.bmp')
         
         self.position[0] = random.randint(0, self.settings.width-1)
         self.position[1] = random.randint(0, self.settings.height-1)
@@ -104,7 +104,7 @@ class Strawberry():
     def blit(self, screen):
         screen.blit(self.image, [p * self.settings.rect_len for p in self.position])
    
-    def initialize(self):
+    def initialize(self): #starting position
         self.position = [15, 10]
       
         
@@ -159,7 +159,10 @@ class Game:
         self.snake.update()
         
         if self.snake.position == self.strawberry.position:
+            if self.strawberry.style == '3':
+                self.snake.score += 1
             self.strawberry.random_pos(self.snake)
+
             reward = 1
             self.snake.score += 1
         else:
