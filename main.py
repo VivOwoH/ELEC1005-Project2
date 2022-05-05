@@ -48,14 +48,14 @@ def message_display(text, x, y, color=black):
     pygame.display.update()
 
 
-def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter=None):
+def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter=None, parameter2=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(screen, active_color, (x, y, w, h))
         if click[0] == 1 and action != None:
             if parameter != None:
-                action(parameter)
+                action(parameter, parameter2)
             else:
                 action()
     else:
@@ -89,14 +89,17 @@ def initial_interface():
         screen.fill(white)
         message_display('Gluttonous', game.settings.width / 2 * 15, game.settings.height / 4 * 15)
 
-        button('Go!', 80, 240, 80, 40, green, bright_green, game_loop, 'human')
-        button('Quit', 270, 240, 80, 40, red, bright_red, quitgame)
+        button('Easy', 80, 180, 80, 40, blue, bright_blue, game_loop, 'human', 5)
+        button('Medium', 175, 180, 80, 40, blue, bright_blue, game_loop, 'human', 8)
+        button('Hard', 270, 180, 80, 40, blue, bright_blue, game_loop, 'human', 12)
+
+        button('Quit', 175, 240, 80, 40, red, bright_red, quitgame)
 
         pygame.display.update()
         pygame.time.Clock().tick(15)
 
 
-def game_loop(player, fps=10):
+def game_loop(player, fps):
     game.restart_game()
 
     while not game.game_end():
@@ -104,7 +107,6 @@ def game_loop(player, fps=10):
         pygame.event.pump()
 
         move = human_move()
-        fps = 5
 
         game.do_move(move)
 

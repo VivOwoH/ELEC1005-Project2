@@ -11,4 +11,3 @@ To start the game
 
 	$ python main.py
 
-testing
