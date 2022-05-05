@@ -10,3 +10,5 @@ You will need to modify this code to complete your Project 2 assignment.
 To start the game
 
 	$ python main.py
+
+testing
