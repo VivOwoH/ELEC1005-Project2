@@ -9,7 +9,6 @@ import numpy as np
 
 class Settings:
     def __init__(self):
-        # 屏幕属性
         self.width = 28
         self.height = 28
         self.rect_len = 15
@@ -34,7 +33,7 @@ class Snake:
 
     def initialize(self):
         self.position = [6, 6]
-        self.segments = [[6 - i, 6] for i in range(3)]
+        self.segments = [[6 - i, 6] for i in range(3)] # start with 3 part (include head)
         self.score = 0
 
     def blit_body(self, x, y, screen):
@@ -78,7 +77,6 @@ class Snake:
             self.position[1] -= 1
         if self.facing == 'down':
             self.position[1] += 1
-        self.segments.insert(0, list(self.position))
         
 class Strawberry():
     def __init__(self, settings):
@@ -157,11 +155,15 @@ class Game:
             self.snake.facing = change_direction
 
         self.snake.update()
-        
+        self.check_wraparound()
+        # insert segments AFTER check wraparound
+        self.snake.segments.insert(0, list(self.snake.position))
+
         if self.snake.position == self.strawberry.position:
             pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/eat.mp3'))
+            # star object +5, has timer of 5s
             if self.strawberry.style == '3':
-                self.snake.score += 1
+                self.snake.score += 4
             self.strawberry.random_pos(self.snake)
 
             reward = 1
@@ -169,18 +171,25 @@ class Game:
         else:
             self.snake.segments.pop()
             reward = 0
-                
+
         if self.game_end():
             return -1
                     
         return reward
     
+    def check_wraparound(self):
+        if self.snake.position[0] >= self.settings.width:
+            self.snake.position[0] -= self.settings.width
+        if self.snake.position[0] < 0:
+            self.snake.position[0] += self.settings.width
+        if self.snake.position[1] >= self.settings.height:
+            self.snake.position[1] -= self.settings.height
+        if self.snake.position[1] < 0:
+            self.snake.position[1] += self.settings.height
+        print(self.snake.position)
+
     def game_end(self):
         end = False
-        if self.snake.position[0] >= self.settings.width or self.snake.position[0] < 0:
-            end = True
-        if self.snake.position[1] >= self.settings.height or self.snake.position[1] < 0:
-            end = True
         if self.snake.segments[0] in self.snake.segments[1:]:
             end = True
 
