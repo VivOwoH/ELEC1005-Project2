@@ -23,7 +23,7 @@ Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydne
 	- [ ] Instructions/Tutorial level 
 	- [x] Difficulties (easy, medium, hard) 
 	- [x] Exit 
-- [] In-game menu (pause overlay) 
+- [ ] In-game menu (pause overlay) 
 	- [ ] Restart 
 	- [ ] Quit to main menu 
 
