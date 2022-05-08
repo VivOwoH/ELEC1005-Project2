@@ -20,7 +20,7 @@ Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydne
 	- [ ] Top 10 Scoreboard to record scores of players (Need sign-in area) 
 	- [x] New game 
 	- [ ] Continue game 
-	- [ ] <u>(**WIP**) Instructions/Tutorial level</u>
+	- [ ] (**WIP**) Instructions/Tutorial level
 	- [x] Difficulties (easy, medium, hard) 
 	- [x] Exit 
 - [ ] In-game menu (pause overlay) 
