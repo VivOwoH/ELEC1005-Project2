@@ -1,5 +1,7 @@
 # ELEC1005Y2022PROJECT2
+
 (*put any links you think important here)
+
 Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydney_edu_au/EfSMiCQLXwFDgoNNdjwQKLIBUfmHyUfVMpO_09A0Y4aIlw?e=5eraSc
 
 
@@ -14,31 +16,31 @@ Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydne
 ### Should Have 
 - [x] A ‘Eating’ sound is generated whenever snake eats object. 
 - [x] A ‘punching’ sound is generated when snake crashes. 
-- [] Main menu 
-	- [] Top 10 Scoreboard to record scores of players (Need sign-in area) 
+- [ ] Main menu 
+	- [ ] Top 10 Scoreboard to record scores of players (Need sign-in area) 
 	- [x] New game 
-	- [] Continue game 
-	- [] Instructions/Tutorial level 
+	- [ ] Continue game 
+	- [ ] Instructions/Tutorial level 
 	- [x] Difficulties (easy, medium, hard) 
 	- [x] Exit 
 - [] In-game menu (pause overlay) 
-	- [] Restart 
-	- [] Quit to main menu 
+	- [ ] Restart 
+	- [ ] Quit to main menu 
 
 ### Could Have 
-- [] Powerup (each with different timers, could also dance around screens to make them difficult to eat) 
+- [ ] Powerup (each with different timers, could also dance around screens to make them difficult to eat) 
 	- [x] Objects that give more score  
-	- [] Objects that allow snake to lose half of its length 
-- [] Different Themes (main menu option) 
-	- [] Retro Nokia-style theme 
-	- [] Minecraft theme(?) 
-- [] Snake speed increases as game goes on to increase difficulty (*repetitive, consider to delete) 
+	- [ ] Objects that allow snake to lose half of its length 
+- [ ] Different Themes (main menu option) 
+	- [ ] Retro Nokia-style theme 
+	- [ ] Minecraft theme(?) 
+- [ ] Snake speed increases as game goes on to increase difficulty (*repetitive, consider to delete) 
 
 
 ### Non-functional Requirements 
-- [] Go button should load in-game page within a few seconds. 
-- [] Quit button should send user out of the game within a few seconds. 
-- [] Exit button should send user back to main menu page from in-game page within a few seconds. 
+- [ ] Go button should load in-game page within a few seconds. 
+- [ ] Quit button should send user out of the game within a few seconds. 
+- [ ] Exit button should send user back to main menu page from in-game page within a few seconds. 
 
 ## Test Coverage report
 
