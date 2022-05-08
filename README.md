@@ -1,11 +1,11 @@
 # ELEC1005Y2022PROJECT2
 
-(*put any links you think important here)
+(*put any links you think important here*)
 
 Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydney_edu_au/EfSMiCQLXwFDgoNNdjwQKLIBUfmHyUfVMpO_09A0Y4aIlw?e=5eraSc
 
 
-## Requirements (*please tick off when complete a requirement)
+## Requirements (*please tick off when complete a requirement*)
 ### Must Have 
 - [x] Random object appears at a random location when snake eats. 
 - [x] When snake eats, snake increases in length by 1. 
@@ -34,7 +34,7 @@ Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydne
 - [ ] Different Themes (main menu option) 
 	- [ ] Retro Nokia-style theme 
 	- [ ] Minecraft theme(?) 
-- [ ] Snake speed increases as game goes on to increase difficulty (*repetitive, consider to delete) 
+- [ ] Snake speed increases as game goes on to increase difficulty (*repetitive, consider to delete*) 
 
 
 ### Non-functional Requirements 
