@@ -122,19 +122,21 @@ class Game:
         self.snake.initialize()
         self.strawberry.initialize()
 
-    def current_state(self):         
-        state = np.zeros((self.settings.width+2, self.settings.height+2, 2))
-        expand = [[0, 1], [0, -1], [-1, 0], [1, 0], [0, 2], [0, -2], [-2, 0], [2, 0]]
+    # uncomment if new implementation need to use states
+    
+    # def current_state(self):         
+    #     state = np.zeros((self.settings.width+2, self.settings.height+2, 2))
+    #     expand = [[0, 1], [0, -1], [-1, 0], [1, 0], [0, 2], [0, -2], [-2, 0], [2, 0]]
         
-        for position in self.snake.segments:
-            state[position[1], position[0], 0] = 1
+    #     for position in self.snake.segments:
+    #         state[position[1], position[0], 0] = 1
         
-        state[:, :, 1] = -0.5        
+    #     state[:, :, 1] = -0.5        
 
-        state[self.strawberry.position[1], self.strawberry.position[0], 1] = 0.5
-        for d in expand:
-            state[self.strawberry.position[1]+d[0], self.strawberry.position[0]+d[1], 1] = 0.5
-        return state
+    #     state[self.strawberry.position[1], self.strawberry.position[0], 1] = 0.5
+    #     for d in expand:
+    #         state[self.strawberry.position[1]+d[0], self.strawberry.position[0]+d[1], 1] = 0.5
+    #     return state
     
     def direction_to_int(self, direction):
         direction_dict = {value : key for key,value in self.move_dict.items()}
@@ -161,9 +163,9 @@ class Game:
 
         if self.snake.position == self.strawberry.position:
             pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/eat.mp3'))
-            # star object +5, has timer of 5s
+            # star object +2, TODO:has timer of 5s
             if self.strawberry.style == '3':
-                self.snake.score += 4
+                self.snake.score += 1
             self.strawberry.random_pos(self.snake)
 
             reward = 1
@@ -186,7 +188,6 @@ class Game:
             self.snake.position[1] -= self.settings.height
         if self.snake.position[1] < 0:
             self.snake.position[1] += self.settings.height
-        print(self.snake.position)
 
     def game_end(self):
         end = False
@@ -197,6 +198,8 @@ class Game:
     
     def blit_score(self, color, screen):
         font = pygame.font.SysFont(None, 25)
-        text = font.render('Score: ' + str(self.snake.score), True, color)
+        score_text = 'Score: ' + str(self.snake.score)
+        text = font.render(score_text, True, color)
         screen.blit(text, (0, 0))
+        return score_text # test only
 
