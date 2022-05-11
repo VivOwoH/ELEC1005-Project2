@@ -50,6 +50,11 @@ class Snake:
             screen.blit(self.image_right, (x, y))  
             
     def blit_tail(self, x, y, screen):
+        # second last - last segment
+        # e.g. right [6,6] - [5,6] -> [1,0]
+        #      up [6,5] - [6,6] -> [0,-1]
+        #      down [6,6] - [6,5] -> [0,1]
+        #      left [5,6] - [6,6] -> [-1,0]
         tail_direction = [self.segments[-2][i] - self.segments[-1][i] for i in range(2)]
         
         if tail_direction == [0, -1]:
@@ -60,6 +65,8 @@ class Snake:
             screen.blit(self.tail_left, (x, y))  
         else:
             screen.blit(self.tail_right, (x, y))  
+        
+        return tail_direction
     
     def blit(self, rect_len, screen):
         self.blit_head(self.segments[0][0]*rect_len, self.segments[0][1]*rect_len, screen)                
@@ -92,7 +99,8 @@ class Strawberry():
         
         self.position[0] = random.randint(0, self.settings.width-1)
         self.position[1] = random.randint(0, self.settings.height-1)
-
+        
+        # limit the strawberries inside a inner square (9 block away from wall)
         self.position[0] = random.randint(9, 19)
         self.position[1] = random.randint(9, 19)
         
@@ -101,6 +109,7 @@ class Strawberry():
 
     def blit(self, screen):
         screen.blit(self.image, [p * self.settings.rect_len for p in self.position])
+        return [p * self.settings.rect_len for p in self.position]
    
     def initialize(self): #starting position
         self.position = [15, 10]
