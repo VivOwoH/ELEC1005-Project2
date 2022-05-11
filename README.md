@@ -43,5 +43,10 @@ Report: https://unisydneyedu-my.sharepoint.com/:w:/g/personal/weha7612_uni_sydne
 - [ ] Exit button should send user back to main menu page from in-game page within a few seconds. 
 
 ## Test Coverage report
-
+Name           Stmts   Miss  Cover
+----------------------------------
+game.py          137      7    95%
+test_game.py     157      0   100%
+----------------------------------
+TOTAL            294      7    98%
 
