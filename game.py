@@ -12,11 +12,10 @@ class Settings:
         self.width = 28
         self.height = 28
         self.rect_len = 15
+        self.banner_height = 50
 
 class Snake:
-    def __init__(self):
-        """_summary_
-        """
+    def __init__(self, settings):
         self.image_up = pygame.image.load('images/head_up.bmp')
         self.image_down = pygame.image.load('images/head_down.bmp')
         self.image_left = pygame.image.load('images/head_left.bmp')
@@ -29,6 +28,7 @@ class Snake:
             
         self.image_body = pygame.image.load('images/body.bmp')
 
+        self.settings = settings
         self.facing = "right"
         self.initialize()
 
@@ -38,13 +38,6 @@ class Snake:
         self.score = 0
 
     def blit_body(self, x, y, screen):
-        """_summary_
-
-        Args:
-            x (_type_): _description_
-            y (_type_): _description_
-            screen (_type_): _description_
-        """
         screen.blit(self.image_body, (x, y))
         
     def blit_head(self, x, y, screen):
@@ -77,10 +70,11 @@ class Snake:
         return tail_direction
     
     def blit(self, rect_len, screen):
-        self.blit_head(self.segments[0][0]*rect_len, self.segments[0][1]*rect_len, screen)                
+        banner = self.settings.banner_height
+        self.blit_head(self.segments[0][0]*rect_len, self.segments[0][1]*rect_len+banner, screen)                
         for position in self.segments[1:-1]:
-            self.blit_body(position[0]*rect_len, position[1]*rect_len, screen)
-        self.blit_tail(self.segments[-1][0]*rect_len, self.segments[-1][1]*rect_len, screen)                
+            self.blit_body(position[0]*rect_len, position[1]*rect_len+banner, screen)
+        self.blit_tail(self.segments[-1][0]*rect_len, self.segments[-1][1]*rect_len+banner, screen)                
             
     
     def update(self):
@@ -116,19 +110,19 @@ class Strawberry():
             self.random_pos(snake)
 
     def blit(self, screen):
-        screen.blit(self.image, [p * self.settings.rect_len for p in self.position])
-        return [p * self.settings.rect_len for p in self.position]
+        x = self.position[0] * self.settings.rect_len
+        y = self.position[1] * self.settings.rect_len + self.settings.banner_height
+        screen.blit(self.image, [x,y])
+        return [x,y]
    
     def initialize(self): #starting position
         self.position = [15, 10]
       
         
 class Game:
-    """
-    """
     def __init__(self):
         self.settings = Settings()
-        self.snake = Snake()
+        self.snake = Snake(self.settings)
         self.strawberry = Strawberry(self.settings)
         self.move_dict = {0 : 'up',
                           1 : 'down',
@@ -197,12 +191,16 @@ class Game:
         return reward
     
     def check_wraparound(self):
+        # right wall
         if self.snake.position[0] >= self.settings.width:
             self.snake.position[0] -= self.settings.width
+        # left wall
         if self.snake.position[0] < 0:
             self.snake.position[0] += self.settings.width
+        # bottom wall
         if self.snake.position[1] >= self.settings.height:
             self.snake.position[1] -= self.settings.height
+        # top wall
         if self.snake.position[1] < 0:
             self.snake.position[1] += self.settings.height
 
