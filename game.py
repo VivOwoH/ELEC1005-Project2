@@ -15,7 +15,8 @@ class Settings:
 
 class Snake:
     def __init__(self):
-        
+        """_summary_
+        """
         self.image_up = pygame.image.load('images/head_up.bmp')
         self.image_down = pygame.image.load('images/head_down.bmp')
         self.image_left = pygame.image.load('images/head_left.bmp')
@@ -37,6 +38,13 @@ class Snake:
         self.score = 0
 
     def blit_body(self, x, y, screen):
+        """_summary_
+
+        Args:
+            x (_type_): _description_
+            y (_type_): _description_
+            screen (_type_): _description_
+        """
         screen.blit(self.image_body, (x, y))
         
     def blit_head(self, x, y, screen):
