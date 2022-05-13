@@ -115,7 +115,6 @@ def display_tut():
     
 
 def quitgame():
-    print("quit")
     pygame.quit()
     quit()
 
