@@ -79,24 +79,28 @@ def display_tut():
         message_display('WASD/arrows to move.', game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 20,
                             25, white)
-        message_display('Eat different food to score point!', 
+        message_display('Eat different food to score point.', 
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 60,
                             25, white)
-        message_display('But be careful...', 
+        message_display('Stars give you more points!', 
                             game.settings.width / 2 * 15, 
-                            game.settings.height / 5 * 15 + 120,
+                            game.settings.height / 5 * 15 + 110,
                             20, white)
-        message_display('You grow larger as your points go up.', 
+        message_display('But be careful...', 
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 150,
                             20, white)
+        message_display('You grow larger as your points go up.', 
+                            game.settings.width / 2 * 15, 
+                            game.settings.height / 5 * 15 + 180,
+                            20, white)
         message_display('You lose if you crash into yourself.', 
                             game.settings.width / 2 * 15, 
-                            game.settings.height / 5 * 15 + 200,
+                            game.settings.height / 5 * 15 + 230,
                             20, white)
         message_display('In game, hold ESC to quit.', game.settings.width / 2 * 15, 
-                            game.settings.height / 5 * 15 + 260,
+                            game.settings.height / 5 * 15 + 290,
                             20, white)
         message_display('(Press ESC to return to menu)', game.settings.width / 2 * 15, 
                             game.settings.height * 15,
@@ -119,18 +123,26 @@ def quitgame():
     quit()
 
 
-def crash():
+def crash(fps):
     pygame.mixer.Sound.play(crash_sound)
-    message_display('crashed', game.settings.width / 2 * 15, 
-                        game.settings.height / 3 * 15 + banner_height,
-                        50, white)
-    time.sleep(1)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
+        message_display('crashed', game.settings.width / 2 * 15, 
+                            game.settings.height / 3 * 15 + banner_height,
+                            50, white)
+        button('Restart', 60, 350 + banner_height, 80, 40, green, bright_green, game_loop, 'human', fps)
+        button('Return to Menu', 210, 350 + banner_height, 160, 40, orange, bright_orange, initial_interface)
+
+        pygame.display.update()
 
 def initial_interface():
     intro = True
+    i = 0
     while intro:
-
+        i += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -167,12 +179,13 @@ def game_loop(player, fps):
         game.snake.blit(rect_len, screen)
         game.strawberry.blit(screen)
         game.blit_score(white, screen)
+        pygame.draw.aaline(screen, white, (0,banner_height), (game.settings.width*15, banner_height))
 
         pygame.display.flip()
 
         fpsClock.tick(fps)
 
-    crash()
+    crash(fps)
 
 
 def human_move():

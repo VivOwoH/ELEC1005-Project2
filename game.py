@@ -33,6 +33,7 @@ class Snake:
         self.initialize()
 
     def initialize(self):
+        self.facing = "right"
         self.position = [6, 6]
         self.segments = [[6 - i, 6] for i in range(3)] # start with 3 part (include head)
         self.score = 0
@@ -66,7 +67,7 @@ class Snake:
             screen.blit(self.tail_left, (x, y))  
         else:
             screen.blit(self.tail_right, (x, y))  
-        print(tail_direction)
+
         return tail_direction
     
     def blit(self, rect_len, screen):
