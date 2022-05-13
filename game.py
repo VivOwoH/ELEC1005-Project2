@@ -58,15 +58,15 @@ class Snake:
         #      left [5,6] - [6,6] -> [-1,0]
         tail_direction = [self.segments[-2][i] - self.segments[-1][i] for i in range(2)]
         
-        if tail_direction == [0, -1]:
+        if tail_direction == [0, -1] or tail_direction == [0, 27]:
             screen.blit(self.tail_up, (x, y))
-        elif tail_direction == [0, 1]:
+        elif tail_direction == [0, 1] or tail_direction == [0, -27]:
             screen.blit(self.tail_down, (x, y))  
-        elif tail_direction == [-1, 0]:
+        elif tail_direction == [-1, 0] or tail_direction == [27, 0]:
             screen.blit(self.tail_left, (x, y))  
         else:
             screen.blit(self.tail_right, (x, y))  
-        
+        print(tail_direction)
         return tail_direction
     
     def blit(self, rect_len, screen):
