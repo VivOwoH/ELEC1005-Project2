@@ -115,22 +115,32 @@ def display_tut():
     
 
 def quitgame():
+    print("quit")
     pygame.quit()
     quit()
 
 
-def crash():
+def crash(fps):
     pygame.mixer.Sound.play(crash_sound)
-    message_display('crashed', game.settings.width / 2 * 15, 
-                        game.settings.height / 3 * 15 + banner_height,
-                        50, white)
-    time.sleep(1)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
+        message_display('crashed', game.settings.width / 2 * 15, 
+                            game.settings.height / 3 * 15 + banner_height,
+                            50, white)
+        button('Restart', 60, 350 + banner_height, 80, 40, green, bright_green, game_loop, 'human', fps)
+        button('Return to Menu', 210, 350 + banner_height, 160, 40, orange, bright_orange, initial_interface)
+
+        pygame.display.update()
 
 def initial_interface():
     intro = True
+    i = 0
     while intro:
-
+        i += 1
+        print(i)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -167,12 +177,13 @@ def game_loop(player, fps):
         game.snake.blit(rect_len, screen)
         game.strawberry.blit(screen)
         game.blit_score(white, screen)
+        pygame.draw.aaline(screen, white, (0,banner_height), (game.settings.width*15, banner_height))
 
         pygame.display.flip()
 
         fpsClock.tick(fps)
 
-    crash()
+    crash(fps)
 
 
 def human_move():
