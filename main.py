@@ -173,7 +173,7 @@ def display_input_box(fps):
             if event.type == pygame.KEYDOWN:
                 if active:
                     if event.key == pygame.K_RETURN:
-                        d = shelve.open('score.txt') 
+                        d = shelve.open('score.txt', flag='w') 
                         d['username'] = name
                         d.close()
                         name = ''
@@ -209,7 +209,7 @@ def initial_interface():
     name2 = ''
     name3 = ''
     try:
-        d = shelve.open('score.txt')
+        d = shelve.open('score.txt', flag='r')
         score1 = d['score1']
         name1 = d['name1']
         score2 = d['score2']
@@ -286,7 +286,7 @@ def game_loop(player, fps):
         fpsClock.tick(fps)
 
     # save score here
-    d = shelve.open('score.txt') 
+    d = shelve.open('score.txt', flag='w') 
     if 'score1' not in d:
         d['score1'] = game.snake.score
         d['name1'] = d['username']
