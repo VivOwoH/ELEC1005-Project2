@@ -6,6 +6,7 @@ Created on Wed May 16 15:22:20 2018
 """
 
 import pygame
+import shelve
 import time
 from pygame.locals import KEYDOWN, K_RIGHT, K_LEFT, K_UP, K_DOWN, K_ESCAPE
 from pygame.locals import QUIT
@@ -57,8 +58,10 @@ def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(screen, active_color, (x, y, w, h))
         if click[0] == 1 and action != None:
-            if parameter != None:
+            if parameter and parameter2 != None:
                 action(parameter, parameter2)
+            elif parameter != None:
+                action(parameter)
             else:
                 action()
     else:
@@ -114,6 +117,7 @@ def display_tut():
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
+                quit()
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 tut_finish = True
     
@@ -129,6 +133,7 @@ def crash(fps):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                quit()
 
         message_display('crashed', game.settings.width / 2 * 15, 
                             game.settings.height / 3 * 15 + banner_height,
@@ -138,30 +143,125 @@ def crash(fps):
 
         pygame.display.update()
 
-def initial_interface():
-    intro = True
-    i = 0
-    while intro:
-        i += 1
+def display_input_box(fps):
+    input_box = pygame.Rect(game.settings.width / 4 * 15,
+                            game.settings.height * 15 / 2 + banner_height,
+                             140, 32)
+    color_inactive = blue
+    color_active = red
+    color = color_inactive
+    active = False
+    name = ''
+    # input box code reference from:
+    # https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
+    while True:
+        screen.fill(white)
+        message_display('Gluttonous', game.settings.width / 2 * 15, 
+                        game.settings.height / 5 * 15 + banner_height, 50)
+                        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # user clicked on input box
+                if input_box.collidepoint(event.pos):
+                    active = not active # toggle active
+                else:
+                    active = False
+                color = color_active if active else color_inactive
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        d = shelve.open('score.txt') 
+                        d['username'] = name
+                        d.close()
+                        name = ''
+                        game_loop('human', fps)
+                    elif event.key == pygame.K_BACKSPACE:
+                        name = name[:-1]
+                    else:
+                        name += event.unicode
+        
+        # Render the current text.
+        font = pygame.font.SysFont('comicsansms', 20)
+        txt_surface = font.render(name, True, black)
+        # Resize the box if the text is too long.
+        width = max(200, txt_surface.get_width()+10)
+        input_box.w = width
+        # Blit text and input_box rect
+        screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+        pygame.draw.rect(screen, color, input_box, 2)
+
+        message_display('Enter player name:', game.settings.width / 2 * 15, 
+                game.settings.height * 15 / 2 + banner_height - 30, 20)
+
+        # update
+        pygame.display.flip()
+        pygame.time.Clock().tick(15)
+        
+
+def initial_interface():
+    score1 = 0
+    score2 = 0
+    score3 = 0
+    name1 = ''
+    name2 = ''
+    name3 = ''
+    try:
+        d = shelve.open('score.txt')
+        score1 = d['score1']
+        name1 = d['name1']
+        score2 = d['score2']
+        name2 = d['name2']
+        score3 = d['score3']
+        name3 = d['name3']
+        d.close()
+    except KeyError:
+        pass
+
+    intro = True
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
 
         screen.fill(white)
         message_display('Gluttonous', game.settings.width / 2 * 15, 
-                        game.settings.height / 4 * 15 + banner_height, 50)
+                        game.settings.height / 5 * 15 + banner_height, 50)
 
-        button('Easy', 80, 180 + banner_height, 80, 40, blue, bright_blue, game_loop, 'human', 5)
-        button('Medium', 175, 180 + banner_height, 80, 40, blue, bright_blue, game_loop, 'human', 8)
-        button('Hard', 270, 180 + banner_height, 80, 40, blue, bright_blue, game_loop, 'human', 12)
+        # score board
+        message_display('Score Board', game.settings.width / 2 * 15, 
+                        game.settings.height / 3 * 15 + banner_height, 25)
+        pygame.draw.aaline(screen, black, (50,game.settings.height / 2.5 * 15 + banner_height), 
+                        (game.settings.width*15-50, game.settings.height / 2.5 * 15 + banner_height))
+        
+        if score1==0 and score2==0 and score3==0:
+            message_display('No records', game.settings.width / 2 * 15, 
+                        game.settings.height / 2 * 15 + banner_height, 20)
+        else:
+            if score1 != 0:
+                message_display('{} | {}'.format(name1, score1), game.settings.width / 2 * 15, 
+                        game.settings.height / 2.2 * 15 + banner_height, 18)
+            if score2 != 0:
+                message_display('{} | {}'.format(name2, score2), game.settings.width / 2 * 15, 
+                        game.settings.height / 2.2 * 15 + banner_height + 30, 18)
+            if score3 != 0:
+                message_display('{} | {}'.format(name3, score3), game.settings.width / 2 * 15, 
+                        game.settings.height / 2.2 * 15 + banner_height + 60, 18)
 
-        button('How to play', 145, 240 + banner_height, 140, 40, orange, bright_orange, display_tut)
+        # menu options
+        button('Easy', 80, 270 + banner_height, 80, 40, blue, bright_blue, display_input_box, 5)
+        button('Medium', 175, 270 + banner_height, 80, 40, blue, bright_blue, display_input_box, 8)
+        button('Hard', 270, 270 + banner_height, 80, 40, blue, bright_blue, display_input_box, 12)
 
-        button('Quit', 175, 300 + banner_height, 80, 40, red, bright_red, quitgame)
+        button('How to play', 80, 325 + banner_height, 140, 40, orange, bright_orange, display_tut)
+
+        button('Quit', 270, 325 + banner_height, 80, 40, red, bright_red, quitgame)
 
         pygame.display.update()
         pygame.time.Clock().tick(15)
-
 
 def game_loop(player, fps):
     game.restart_game()
@@ -185,6 +285,53 @@ def game_loop(player, fps):
 
         fpsClock.tick(fps)
 
+    # save score here
+    d = shelve.open('score.txt') 
+    if 'score1' not in d:
+        d['score1'] = game.snake.score
+        d['name1'] = d['username']
+    elif 'score2' not in d:
+        if game.snake.score > d['score1']:
+            d['score2'] = d['score1']
+            d['name2'] = d['name1']
+            d['score1'] = game.snake.score
+            d['name1'] = d['username']
+        else:
+            d['score2'] = game.snake.score
+            d['name2'] = d['username']
+    elif 'score3' not in d:
+        if game.snake.score > d['score1']:
+            d['score3'] = d['score2']
+            d['name3'] = d['name2']
+            d['score2'] = d['score1']
+            d['name2'] = d['name1']
+            d['score1'] = game.snake.score
+            d['name1'] = d['username']
+        elif game.snake.score > d['score2']:
+            d['score3'] = d['score2']
+            d['name3'] = d['name2']
+            d['score2'] = game.snake.score
+            d['name2'] = d['username']
+        else:
+            d['score3'] = game.snake.score
+            d['name3'] = d['username']
+    else:
+        if game.snake.score >= d['score1']:
+            d['score3'] = d['score2']
+            d['name3'] = d['name2']
+            d['score2'] = d['score1'] 
+            d['name2'] = d['name1']
+            d['score1'] = game.snake.score
+            d['name1'] = d['username']
+        elif game.snake.score >= d['score2']:
+            d['score3'] = d['score2'] 
+            d['name3'] = d['name2']
+            d['score2'] = game.snake.score
+            d['name2'] = d['username']
+        elif game.snake.score >= d['score3']:
+            d['score3'] = game.snake.score
+            d['name3'] = d['username']
+    d.close()
     crash(fps)
 
 
@@ -194,6 +341,7 @@ def human_move():
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
+            quit()
 
         elif event.type == KEYDOWN:
             if event.key == K_RIGHT or event.key == ord('d'):
@@ -206,16 +354,16 @@ def human_move():
                 direction = 'down'
             if event.key == K_ESCAPE:
                 time = pygame.time.get_ticks()
-                quit = True
+                gamequit = True
                 # quit if esc key held for 2secs
-                while pygame.time.get_ticks()/1000 - time/1000 < 2 and quit:
+                while pygame.time.get_ticks()/1000 - time/1000 < 2 and gamequit:
                     message_display("Hold ESC to quit...", game.settings.width /2 * 15, 
                                 game.settings.height * 15-40 + banner_height, 20, white)
                     pygame.display.flip()
                     for event2 in pygame.event.get():
                         if event2.type == pygame.KEYUP:
-                            quit = False
-                if quit:
+                            gamequit = False
+                if gamequit:
                     pygame.event.post(pygame.event.Event(QUIT))
 
     move = game.direction_to_int(direction)
