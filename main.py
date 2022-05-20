@@ -44,18 +44,55 @@ tut_logo = pygame.image.load('images/snake.png')
 
 
 def text_objects(text, font, color=black):
+    """Create a text object. 
+
+    Args:
+        text (string): Text string to be rendered.
+        font (Font): Text font (specified size and style).
+        color (Color, optional): Text color. Defaults to black.
+
+    Returns:
+        Surface: source Surface with rendered texts.
+        Rect: destination Rect specifying where the text should be.
+    """
     text_surface = font.render(text, True, color)
     return text_surface, text_surface.get_rect()
 
 
 def message_display(text, x, y, size, color=black):
+    """Display a text message on screen.
+
+    Args:
+        text (string): Message string to be displayed.
+        x (int): x-coordinate of the message.
+        y (int): y-coordinate of the message.
+        size (int): Text size.
+        color (Color, optional): Text color. Defaults to black.
+    """
     large_text = pygame.font.SysFont('comicsansms', size)
     text_surf, text_rect = text_objects(text, large_text, color)
     text_rect.center = (x, y)
     screen.blit(text_surf, text_rect)
 
 
-def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter=None, parameter2=None):
+def button(msg, x, y, w, h, inactive_color, active_color, action=None, 
+                                    parameter=None, parameter2=None):
+    """Create a button object.
+
+    Args:
+        msg (string): Text string within the button.
+        x (int): x-coordinate of the button.
+        y (int): y-coordinate of the button.
+        w (int): Width of the button.
+        h (int): Height of the button.
+        inactive_color (Color): Inactive button color.
+        active_color (Color): Active button color.
+        action (function, optional): A function associated to the button. Defaults to None.
+        parameter (any, optional): The first parameter for the associated function. 
+                                    Defaults to None.
+        parameter2 (any, optional): The second parameter for the associated function. 
+                                    Defaults to None.
+    """
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
@@ -77,6 +114,7 @@ def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter
 
 
 def display_tut():
+    """Display tutorial page on screen."""
     tut_finish = False
     while not tut_finish:
         pygame.event.pump()
@@ -126,11 +164,18 @@ def display_tut():
     
 
 def quitgame():
+    """Quit game and close the program."""
     pygame.quit()
     quit()
 
 
 def crash(fps):
+    """UI feedback when the snake crashes into itself which ends the current game.
+
+    Args:
+        fps (int): The fps of the current game. Used when the user wants to  
+                    restart the game in the same fps (i.e.same difficulty).
+    """
     pygame.mixer.Sound.play(crash_sound)
     while True:
         for event in pygame.event.get():
@@ -147,6 +192,11 @@ def crash(fps):
         pygame.display.update()
 
 def display_input_box(fps):
+    """Display the input box for signing-in player name.
+
+    Args:
+        fps (int): The user's choice of fps (i.e.game difficulty).
+    """
     input_box = pygame.Rect(game.settings.width / 4 * 15,
                             game.settings.height * 15 / 2 + banner_height,
                              140, 32)
@@ -205,6 +255,7 @@ def display_input_box(fps):
 
 
 def initial_interface():
+    """Initial Main Menu interface."""
     score1 = 0
     score2 = 0
     score3 = 0
@@ -267,6 +318,12 @@ def initial_interface():
         pygame.time.Clock().tick(15)
 
 def game_loop(player, fps):
+    """Starts a new game.
+
+    Args:
+        player (string): 'human'.
+        fps (_type_): The user's choice of fps (i.e.game difficulty).
+    """
     game.restart_game()
     power_spawn = False
     power_spawn_time = 0
@@ -367,6 +424,16 @@ def game_loop(player, fps):
 
 
 def human_move():
+    """Listen to the user's key inputs and give corresponding in-game feedback.
+
+    Returns:
+        int: The integer key indicating the snake's current direction.
+             If a key is pressed, it should be the user's latest input.
+                        0 : 'up',
+                        1 : 'down',
+                        2 : 'left',
+                        3 : 'right'  
+    """
     direction = snake.facing
 
     for event in pygame.event.get():
