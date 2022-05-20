@@ -7,6 +7,9 @@ Created on Wed Apr 25 15:19:25 2018
 import pygame, random
 import numpy as np
 
+import game
+
+
 class Settings:
     def __init__(self):
         self.width = 28
@@ -93,38 +96,96 @@ class Strawberry():
         self.settings = settings
         
         self.style = str(random.randint(1, 8))
-        self.image = pygame.image.load('images/food' + str(self.style) + '.bmp')        
+        self.image = pygame.image.load('images/food' + str(self.style) + '.bmp')
+        self.exist = True
         self.initialize()
         
     def random_pos(self, snake):
         self.style = str(random.randint(1, 8))
         self.image = pygame.image.load('images/food' + str(self.style) + '.bmp')
         
-        self.position[0] = random.randint(0, self.settings.width-1)
-        self.position[1] = random.randint(0, self.settings.height-1)
-        
         # limit the strawberries inside a inner square (9 block away from wall)
         self.position[0] = random.randint(9, 19)
         self.position[1] = random.randint(9, 19)
+
+        self.exist = True
         
         if self.position in snake.segments:
             self.random_pos(snake)
 
     def blit(self, screen):
-        x = self.position[0] * self.settings.rect_len
-        y = self.position[1] * self.settings.rect_len + self.settings.banner_height
-        screen.blit(self.image, [x,y])
-        return [x,y]
+        if self.exist:
+            x = self.position[0] * self.settings.rect_len
+            y = self.position[1] * self.settings.rect_len + self.settings.banner_height
+            screen.blit(self.image, [x,y])
+            return [x,y]
+
+    def set_exists(self, exist: bool):
+        self.exist = exist
    
     def initialize(self): #starting position
         self.position = [15, 10]
-      
-        
+
+
+class PowerBerry():
+    def __init__(self, settings):
+        self.settings = settings
+        self.style = str(random.randint(1, 4))
+        self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
+        self.exist = True
+        self.initialize(self.style)
+
+
+    def random_pos(self, snake):
+        self.style = str(random.randint(1, 4))
+        self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
+        self.exist = True
+
+        # limit the strawberries inside a inner square (9 block away from wall)
+        self.position[0] = random.randint(9, 19)
+        self.position[1] = random.randint(9, 19)
+
+        if self.position in snake.segments:
+            self.random_pos(snake)
+
+    def blit(self, screen):
+        if self.exist:
+            x = self.position[0] * self.settings.rect_len
+            y = self.position[1] * self.settings.rect_len + self.settings.banner_height
+            screen.blit(self.image, [x, y])
+            return [x, y]
+
+    def remove(self):
+        self.position = [-1,-1]
+        self.exist = False
+
+    def initialize(self, type):  # starting position TODO spawn timer
+        self.position = [20, 15]
+        self.berry_type = type
+
+
+
 class Game:
     def __init__(self):
         self.settings = Settings()
         self.snake = Snake(self.settings)
         self.strawberry = Strawberry(self.settings)
+        self.powerberry = PowerBerry(self.settings)
+        self.strawberry_ls = [None] * 784
+        self.power_active = {
+            "1": False,
+            "2": False,
+            "3": False,
+            "4": False
+        }
+
+        for i in range(784):
+            s = Strawberry(self.settings)
+            s.set_exists(False)
+            s.position = [i % 28, i // 28]
+            self.strawberry_ls[i] = s
+
+
         self.move_dict = {0 : 'up',
                           1 : 'down',
                           2 : 'left',
@@ -171,24 +232,69 @@ class Game:
         self.snake.update()
         self.check_wraparound()
         # insert segments AFTER check wraparound
-        self.snake.segments.insert(0, list(self.snake.position))
+        self.snake.segments.insert(0, list(self.snake.position))  # automatically inserts a snake length
 
-        if self.snake.position == self.strawberry.position:
+        if self.snake.position == self.strawberry.position: # snake eating strawberry
             pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/eat.mp3'))
             # star object +2, TODO:has timer of 5s
+
+            if self.power_active["1"]:
+                self.snake.score += 1
+
             if self.strawberry.style == '3':
                 self.snake.score += 1
             self.strawberry.random_pos(self.snake)
 
             reward = 1
             self.snake.score += 1
+
+        elif self.snake.position == self.powerberry.position and self.powerberry.exist: # snake eating power berry
+            pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/PowerUp.mp3'))
+            self.power_active[str(self.powerberry.style)] = True
+
+
+            if self.powerberry.style == "2":
+                for i in range(783):
+                    s = Strawberry(self.settings)
+                    s.set_exists(False)
+                    s.position = [i % 28, i // 28]
+                    self.strawberry_ls[i] = s
+
+                for s in self.strawberry_ls:
+                    s.set_exists(True)
+
+            if self.powerberry.style == '3':
+                for z in self.strawberry_ls:
+                    if z.exist:
+                        z.random_pos
+
+                for i in range(784):
+                    s = Strawberry(self.settings)
+                    s.set_exists(False)
+                    s.position = [random.randint(0,28), random.randint(0,28)]
+                    self.strawberry_ls[i] = s
+
+                self.strawberry_ls[random.randint(0, 784)].set_exists(True)
+
+            if self.powerberry.style == "4":
+                self.snake.segments.pop()
+                self.snake.segments.pop()
+
+            self.powerberry.remove()
+            reward = 0
+
         else:
             self.snake.segments.pop()
             reward = 0
 
+        for index, s in enumerate(self.strawberry_ls):
+            if s != None and s.exist and self.snake.position == s.position:
+                self.snake.score += 1
+                s.set_exists(False)
+                s.position = [-1, -1]
+
         if self.game_end():
             return -1
-                    
         return reward
     
     def check_wraparound(self):
@@ -218,4 +324,5 @@ class Game:
         text = font.render(score_text, True, color)
         screen.blit(text, (0, 0))
         return score_text # test only
+
 

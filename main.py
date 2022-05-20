@@ -6,6 +6,9 @@ Created on Wed May 16 15:22:20 2018
 """
 
 import pygame
+import random
+import os
+import sys
 import time
 from pygame.locals import KEYDOWN, K_RIGHT, K_LEFT, K_UP, K_DOWN, K_ESCAPE
 from pygame.locals import QUIT
@@ -165,9 +168,11 @@ def initial_interface():
 
 def game_loop(player, fps):
     game.restart_game()
+    power_spawn = False
+    power_spawn_time = 0
 
     while not game.game_end():
-
+        current_time = pygame.time.get_ticks()
         pygame.event.pump()
 
         move = human_move()
@@ -176,10 +181,36 @@ def game_loop(player, fps):
 
         screen.fill(black)
 
+        if game.power_active["2"]:
+            for i in game.strawberry_ls:
+                i.blit(screen)
+        elif game.power_active["3"]:
+            for j in game.strawberry_ls:
+                if j.exist:
+                    j.blit(screen)
+
         game.snake.blit(rect_len, screen)
         game.strawberry.blit(screen)
+
+
+        if current_time - power_spawn_time >= 20000:
+            game.powerberry.random_pos(game.snake)
+            power_spawn_time = current_time
+            for type in game.power_active.keys():
+                game.power_active[type] = False
+        elif current_time - power_spawn_time >= 6000:
+            for s in game.strawberry_ls:
+                s.position = [-1, -1]
+
+            if game.powerberry.exist:
+                game.powerberry.remove()
+
+        game.powerberry.blit(screen)
+
+
+
         game.blit_score(white, screen)
-        pygame.draw.aaline(screen, white, (0,banner_height), (game.settings.width*15, banner_height))
+        pygame.draw.aaline(screen, white, (0, banner_height), (game.settings.width * 15, banner_height))
 
         pygame.display.flip()
 
@@ -220,7 +251,6 @@ def human_move():
 
     move = game.direction_to_int(direction)
     return move
-
 
 if __name__ == "__main__":
     initial_interface()
