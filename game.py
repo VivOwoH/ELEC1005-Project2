@@ -171,6 +171,7 @@ class Game:
         self.snake = Snake(self.settings)
         self.strawberry = Strawberry(self.settings)
         self.powerberry = PowerBerry(self.settings)
+        self.lives = 3
         self.strawberry_ls = [None] * 784
         self.power_active = {
             "1": False,
@@ -252,6 +253,8 @@ class Game:
             pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/PowerUp.mp3'))
             self.power_active[str(self.powerberry.style)] = True
 
+            if self.power_active["1"]:
+                self.snake.score += 1
 
             if self.powerberry.style == "2":
                 for i in range(783):
@@ -264,9 +267,9 @@ class Game:
                     s.set_exists(True)
 
             if self.powerberry.style == '3':
-                for z in self.strawberry_ls:
-                    if z.exist:
-                        z.random_pos
+                #for z in self.strawberry_ls:
+                    #if z.exist:
+                        #z.random_pos
 
                 for i in range(784):
                     s = Strawberry(self.settings)
@@ -313,9 +316,13 @@ class Game:
 
     def game_end(self):
         end = False
-        if self.snake.segments[0] in self.snake.segments[1:]:
+        if self.lives == 0:
+            print(self.lives)
             end = True
-
+            return end
+        elif self.snake.segments[0] in self.snake.segments[1:]:
+            self.lives -= 0.5
+            print(self.lives)
         return end
     
     def blit_score(self, color, screen):
@@ -324,5 +331,12 @@ class Game:
         text = font.render(score_text, True, color)
         screen.blit(text, (0, 0))
         return score_text # test only
+
+    def blit_life(self, color, screen):
+        font = pygame.font.SysFont(None, 25)
+        score_text = 'Lives: ' + str(int(self.lives))
+        text = font.render(score_text, True, color)
+        screen.blit(text, (100, 0))
+        return score_text
 
 

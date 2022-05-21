@@ -138,13 +138,14 @@ def crash(fps):
                 pygame.quit()
                 quit()
 
-        message_display('crashed', game.settings.width / 2 * 15, 
+        message_display('crashed', game.settings.width / 2 * 15,
                             game.settings.height / 3 * 15 + banner_height,
                             50, white)
         button('Restart', 60, 350 + banner_height, 80, 40, green, bright_green, game_loop, 'human', fps)
         button('Return to Menu', 210, 350 + banner_height, 160, 40, orange, bright_orange, initial_interface)
-
         pygame.display.update()
+        game.lives = 3
+
 
 def display_input_box(fps):
     input_box = pygame.Rect(game.settings.width / 4 * 15,
@@ -307,9 +308,9 @@ def game_loop(player, fps):
 
         game.powerberry.blit(screen)
 
-
-
         game.blit_score(white, screen)
+        game.blit_life(white, screen)
+
         pygame.draw.aaline(screen, white, (0, banner_height), (game.settings.width * 15, banner_height))
 
         pygame.display.flip()
