@@ -209,7 +209,6 @@ class PowerBerry():
         Args:
             snake (Snake): The snake in this game instance.
         """
-        self.style = str(random.randint(1, 4))
         self.style = str(random.randint(1, 3))
         self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
         self.exist = True
@@ -241,7 +240,7 @@ class PowerBerry():
         self.position = [-1,-1]
         self.exist = False
 
-    def initialize(self, type):  # starting position TODO spawn timer
+    def initialize(self, type):  # starting position
         """Intialize this power-up berry.
 
         Args:
@@ -447,6 +446,15 @@ class Game:
         return score_text # test only
 
     def blit_life(self, color, screen):
+        '''Displays the current lives oof the player on the screen
+
+        Args:
+            colour: Lives text color
+            screen (surface): The source surface to display the score
+
+        Returns:
+            string: String of the current Lives of the player
+        '''
         font = pygame.font.SysFont(None, 25)
         score_text = 'Lives: ' + str(int(self.lives))
         text = font.render(score_text, True, color)
