@@ -255,6 +255,12 @@ class Game:
 
             if self.power_active["1"]:
                 self.snake.score += 1
+                second_berry = False
+                for x in self.strawberry_ls:
+                    if x != None and x.exist:
+                        second_berry = True
+                if self.strawberry.style == '3' or second_berry:
+                    self.snake.score += 2
 
             if self.powerberry.style == "2":
                 for i in range(783):
@@ -317,12 +323,10 @@ class Game:
     def game_end(self):
         end = False
         if self.lives == 0:
-            print(self.lives)
             end = True
             return end
         elif self.snake.segments[0] in self.snake.segments[1:]:
             self.lives -= 0.5
-            print(self.lives)
         return end
     
     def blit_score(self, color, screen):
