@@ -286,7 +286,7 @@ def initial_interface():
     name2 = ''
     name3 = ''
     try:
-        d = shelve.open('score.txt', flag='r')
+        d = shelve.open('score.txt')
         score1 = d['score1']
         name1 = d['name1']
         score2 = d['score2']
