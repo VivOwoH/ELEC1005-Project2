@@ -119,7 +119,13 @@ def display_tut():
     while not tut_finish:
         pygame.event.pump()
 
+        multiplier_img = pygame.image.load('images/power1.bmp')
+        frenzy_img = pygame.image.load('images/power2.bmp')
+        double_img = pygame.image.load('images/power3.bmp')
+        shorter_img = pygame.image.load('images/power4.bmp')
+
         screen.blit(tut_logo, (game.settings.width / 3 * 15,0-banner_height))
+        
         message_display('WASD/arrows to move.', game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 20,
                             25, white)
@@ -127,24 +133,40 @@ def display_tut():
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 60,
                             25, white)
-        message_display('Stars give you more points!', 
+        message_display('Normal food = 1 point, Stars = 2 points', 
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 110,
                             20, white)
-        message_display('But be careful...', 
+        message_display('List of Power-up:', 
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 150,
                             20, white)
-        message_display('You grow larger as your points go up.', 
-                            game.settings.width / 2 * 15, 
+        screen.blit(multiplier_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 175])
+        message_display('Normal food now gain x2 points', 
+                            game.settings.width / 2 * 15 + 50, 
                             game.settings.height / 5 * 15 + 180,
-                            20, white)
-        message_display('You lose if you crash into yourself.', 
-                            game.settings.width / 2 * 15, 
+                            15, white)
+        screen.blit(frenzy_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 200])
+        message_display('Frenzy mode', 
+                            game.settings.width / 2 * 15 + 50, 
+                            game.settings.height / 5 * 15 + 205,
+                            15, white)
+        screen.blit(double_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 225])
+        message_display('Double spawn', 
+                            game.settings.width / 2 * 15 + 50, 
                             game.settings.height / 5 * 15 + 230,
-                            20, white)
+                            15, white)
+        screen.blit(shorter_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 250])
+        message_display('Snake lose 1 length', 
+                            game.settings.width / 2 * 15 + 50, 
+                            game.settings.height / 5 * 15 + 255,
+                            15, white)
         message_display('In game, hold ESC to quit.', game.settings.width / 2 * 15, 
-                            game.settings.height / 5 * 15 + 290,
+                            game.settings.height / 5 * 15 + 300,
                             20, white)
         message_display('(Press ESC to return to menu)', game.settings.width / 2 * 15, 
                             game.settings.height * 15,

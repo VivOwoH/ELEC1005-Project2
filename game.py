@@ -342,7 +342,7 @@ class Game:
 
         if self.snake.position == self.strawberry.position: # snake eating strawberry
             pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/eat.mp3'))
-            # star object +2, TODO:has timer of 5s
+            # star object +2
 
             if self.power_active["1"]:
                 self.snake.score += 1
