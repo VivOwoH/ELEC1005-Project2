@@ -121,8 +121,7 @@ def display_tut():
 
         multiplier_img = pygame.image.load('images/power1.bmp')
         frenzy_img = pygame.image.load('images/power2.bmp')
-        double_img = pygame.image.load('images/power3.bmp')
-        shorter_img = pygame.image.load('images/power4.bmp')
+        shorter_img = pygame.image.load('images/power3.bmp')
 
         screen.blit(tut_logo, (game.settings.width / 3 * 15,0-banner_height))
         
@@ -153,17 +152,11 @@ def display_tut():
                             game.settings.width / 2 * 15 + 50, 
                             game.settings.height / 5 * 15 + 205,
                             15, white)
-        screen.blit(double_img, [game.settings.width / 2 * 15 - 100, 
-                                    game.settings.height / 5 * 15 + 225])
-        message_display('Double spawn', 
-                            game.settings.width / 2 * 15 + 50, 
-                            game.settings.height / 5 * 15 + 230,
-                            15, white)
         screen.blit(shorter_img, [game.settings.width / 2 * 15 - 100, 
-                                    game.settings.height / 5 * 15 + 250])
+                                    game.settings.height / 5 * 15 + 225])
         message_display('Snake lose 1 length', 
                             game.settings.width / 2 * 15 + 50, 
-                            game.settings.height / 5 * 15 + 255,
+                            game.settings.height / 5 * 15 + 230,
                             15, white)
         message_display('In game, hold ESC to quit.', game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 300,
