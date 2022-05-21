@@ -293,23 +293,24 @@ def game_loop(player, fps):
         game.snake.blit(rect_len, screen)
         game.strawberry.blit(screen)
 
-
-        if current_time - power_spawn_time >= 20000:
-            game.powerberry.random_pos(game.snake)
-            power_spawn_time = current_time
+        if current_time - power_spawn_time >= 20000:  # every 20 seconds powerup spawns
+            game.powerberry.random_pos(game.snake)  # spawn random power up
+            power_spawn_time = current_time  # setting the spawn time of the powerup
             for type in game.power_active.keys():
                 game.power_active[type] = False
-        elif current_time - power_spawn_time >= 6000:
-            for s in game.strawberry_ls:
-                s.position = [-1, -1]
-
-            if game.powerberry.exist:
+        elif current_time - power_spawn_time >= 6000:  # despawn the power up after 6 seconds
+            if game.power_active['2']:
+                for s in game.strawberry_ls:
+                    s.position = [-1, -1]  # move the position of the berry out of the way
+            if game.powerberry.exist:  # delete the berry of it exists
                 game.powerberry.remove()
+
+        print(game.power_active)
 
         game.powerberry.blit(screen)
 
         game.blit_score(white, screen)
-        game.blit_life(white, screen)
+        game.blit_life(white, screen)  # blit the lives of the player
 
         pygame.draw.aaline(screen, white, (0, banner_height), (game.settings.width * 15, banner_height))
 

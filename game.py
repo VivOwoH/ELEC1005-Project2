@@ -130,14 +130,14 @@ class Strawberry():
 class PowerBerry():
     def __init__(self, settings):
         self.settings = settings
-        self.style = str(random.randint(1, 4))
+        self.style = str(random.randint(1, 3))
         self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
         self.exist = True
         self.initialize(self.style)
 
 
     def random_pos(self, snake):
-        self.style = str(random.randint(1, 4))
+        self.style = str(random.randint(1, 3))
         self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
         self.exist = True
 
@@ -177,7 +177,6 @@ class Game:
             "1": False,
             "2": False,
             "3": False,
-            "4": False
         }
 
         for i in range(784):
@@ -185,7 +184,6 @@ class Game:
             s.set_exists(False)
             s.position = [i % 28, i // 28]
             self.strawberry_ls[i] = s
-
 
         self.move_dict = {0 : 'up',
                           1 : 'down',
@@ -262,7 +260,7 @@ class Game:
                 if self.strawberry.style == '3' or second_berry:
                     self.snake.score += 2
 
-            if self.powerberry.style == "2":
+            elif self.powerberry.style == "2":
                 for i in range(783):
                     s = Strawberry(self.settings)
                     s.set_exists(False)
@@ -272,21 +270,8 @@ class Game:
                 for s in self.strawberry_ls:
                     s.set_exists(True)
 
-            if self.powerberry.style == '3':
-                #for z in self.strawberry_ls:
-                    #if z.exist:
-                        #z.random_pos
-
-                for i in range(784):
-                    s = Strawberry(self.settings)
-                    s.set_exists(False)
-                    s.position = [random.randint(0,28), random.randint(0,28)]
-                    self.strawberry_ls[i] = s
-
-                self.strawberry_ls[random.randint(0, 784)].set_exists(True)
-
-            if self.powerberry.style == "4":
-                self.snake.segments.pop()
+            elif self.powerberry.style == "3":
+                self.snake.segments.pop()  # need to pop snake segments twice because it automatically adds 1 length
                 self.snake.segments.pop()
 
             self.powerberry.remove()
@@ -326,7 +311,9 @@ class Game:
             end = True
             return end
         elif self.snake.segments[0] in self.snake.segments[1:]:
-            self.lives -= 0.5
+            self.lives -= 0.5  # to account from the frame rate of the game
+            if self.lives - int(self.lives) == 0:  # only play sound when it's a whole number
+                pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/crash.wav'))
         return end
     
     def blit_score(self, color, screen):
