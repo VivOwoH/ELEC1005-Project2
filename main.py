@@ -44,18 +44,55 @@ tut_logo = pygame.image.load('images/snake.png')
 
 
 def text_objects(text, font, color=black):
+    """Create a text object. 
+
+    Args:
+        text (string): Text string to be rendered.
+        font (Font): Text font (specified size and style).
+        color (Color, optional): Text color. Defaults to black.
+
+    Returns:
+        Surface: source Surface with rendered texts.
+        Rect: destination Rect specifying where the text should be.
+    """
     text_surface = font.render(text, True, color)
     return text_surface, text_surface.get_rect()
 
 
 def message_display(text, x, y, size, color=black):
+    """Display a text message on screen.
+
+    Args:
+        text (string): Message string to be displayed.
+        x (int): x-coordinate of the message.
+        y (int): y-coordinate of the message.
+        size (int): Text size.
+        color (Color, optional): Text color. Defaults to black.
+    """
     large_text = pygame.font.SysFont('comicsansms', size)
     text_surf, text_rect = text_objects(text, large_text, color)
     text_rect.center = (x, y)
     screen.blit(text_surf, text_rect)
 
 
-def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter=None, parameter2=None):
+def button(msg, x, y, w, h, inactive_color, active_color, action=None, 
+                                    parameter=None, parameter2=None):
+    """Create a button object.
+
+    Args:
+        msg (string): Text string within the button.
+        x (int): x-coordinate of the button.
+        y (int): y-coordinate of the button.
+        w (int): Width of the button.
+        h (int): Height of the button.
+        inactive_color (Color): Inactive button color.
+        active_color (Color): Active button color.
+        action (function, optional): A function associated to the button. Defaults to None.
+        parameter (any, optional): The first parameter for the associated function. 
+                                    Defaults to None.
+        parameter2 (any, optional): The second parameter for the associated function. 
+                                    Defaults to None.
+    """
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
@@ -77,11 +114,18 @@ def button(msg, x, y, w, h, inactive_color, active_color, action=None, parameter
 
 
 def display_tut():
+    """Display tutorial page on screen."""
     tut_finish = False
     while not tut_finish:
         pygame.event.pump()
 
+        multiplier_img = pygame.image.load('images/power1.bmp')
+        frenzy_img = pygame.image.load('images/power2.bmp')
+        double_img = pygame.image.load('images/power3.bmp')
+        shorter_img = pygame.image.load('images/power4.bmp')
+
         screen.blit(tut_logo, (game.settings.width / 3 * 15,0-banner_height))
+        
         message_display('WASD/arrows to move.', game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 20,
                             25, white)
@@ -89,24 +133,40 @@ def display_tut():
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 60,
                             25, white)
-        message_display('Stars give you more points!', 
+        message_display('Normal food = 1 point, Stars = 2 points', 
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 110,
                             20, white)
-        message_display('But be careful...', 
+        message_display('List of Power-up:', 
                             game.settings.width / 2 * 15, 
                             game.settings.height / 5 * 15 + 150,
                             20, white)
-        message_display('You grow larger as your points go up.', 
-                            game.settings.width / 2 * 15, 
+        screen.blit(multiplier_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 175])
+        message_display('Normal food now gain x2 points', 
+                            game.settings.width / 2 * 15 + 50, 
                             game.settings.height / 5 * 15 + 180,
-                            20, white)
-        message_display('You lose if you crash into yourself.', 
-                            game.settings.width / 2 * 15, 
+                            15, white)
+        screen.blit(frenzy_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 200])
+        message_display('Frenzy mode', 
+                            game.settings.width / 2 * 15 + 50, 
+                            game.settings.height / 5 * 15 + 205,
+                            15, white)
+        screen.blit(double_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 225])
+        message_display('Double spawn', 
+                            game.settings.width / 2 * 15 + 50, 
                             game.settings.height / 5 * 15 + 230,
-                            20, white)
+                            15, white)
+        screen.blit(shorter_img, [game.settings.width / 2 * 15 - 100, 
+                                    game.settings.height / 5 * 15 + 250])
+        message_display('Snake lose 1 length', 
+                            game.settings.width / 2 * 15 + 50, 
+                            game.settings.height / 5 * 15 + 255,
+                            15, white)
         message_display('In game, hold ESC to quit.', game.settings.width / 2 * 15, 
-                            game.settings.height / 5 * 15 + 290,
+                            game.settings.height / 5 * 15 + 300,
                             20, white)
         message_display('(Press ESC to return to menu)', game.settings.width / 2 * 15, 
                             game.settings.height * 15,
@@ -126,11 +186,18 @@ def display_tut():
     
 
 def quitgame():
+    """Quit game and close the program."""
     pygame.quit()
     quit()
 
 
 def crash(fps):
+    """UI feedback when the snake crashes into itself which ends the current game.
+
+    Args:
+        fps (int): The fps of the current game. Used when the user wants to  
+                    restart the game in the same fps (i.e.same difficulty).
+    """
     pygame.mixer.Sound.play(crash_sound)
     while True:
         for event in pygame.event.get():
@@ -148,6 +215,11 @@ def crash(fps):
 
 
 def display_input_box(fps):
+    """Display the input box for signing-in player name.
+
+    Args:
+        fps (int): The user's choice of fps (i.e.game difficulty).
+    """
     input_box = pygame.Rect(game.settings.width / 4 * 15,
                             game.settings.height * 15 / 2 + banner_height,
                              140, 32)
@@ -206,6 +278,7 @@ def display_input_box(fps):
 
 
 def initial_interface():
+    """Initial Main Menu interface."""
     score1 = 0
     score2 = 0
     score3 = 0
@@ -268,6 +341,12 @@ def initial_interface():
         pygame.time.Clock().tick(15)
 
 def game_loop(player, fps):
+    """Starts a new game.
+
+    Args:
+        player (string): 'human'.
+        fps (_type_): The user's choice of fps (i.e.game difficulty).
+    """
     game.restart_game()
     power_spawn = False
     power_spawn_time = 0
@@ -369,6 +448,16 @@ def game_loop(player, fps):
 
 
 def human_move():
+    """Listen to the user's key inputs and give corresponding in-game feedback.
+
+    Returns:
+        int: The integer key indicating the snake's current direction.
+             If a key is pressed, it should be the user's latest input.
+                        0 : 'up',
+                        1 : 'down',
+                        2 : 'left',
+                        3 : 'right'  
+    """
     direction = snake.facing
 
     for event in pygame.event.get():

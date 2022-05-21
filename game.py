@@ -12,6 +12,8 @@ import game
 
 class Settings:
     def __init__(self):
+        """Constructor for Settings class. Create a new set of settings.
+        """
         self.width = 28
         self.height = 28
         self.rect_len = 15
@@ -19,6 +21,11 @@ class Settings:
 
 class Snake:
     def __init__(self, settings):
+        """Constructor for Snake class. Create a new snake.
+
+        Args:
+            settings (Settings): The settings for this game instance.
+        """
         self.image_up = pygame.image.load('images/head_up.bmp')
         self.image_down = pygame.image.load('images/head_down.bmp')
         self.image_left = pygame.image.load('images/head_left.bmp')
@@ -36,15 +43,30 @@ class Snake:
         self.initialize()
 
     def initialize(self):
+        """Initialize this snake."""
         self.facing = "right"
         self.position = [6, 6]
         self.segments = [[6 - i, 6] for i in range(3)] # start with 3 part (include head)
         self.score = 0
 
     def blit_body(self, x, y, screen):
+        """Display this snake's body segment on screen.
+
+        Args:
+            x (int): x-coordinate of this snake's body segment.
+            y (int): y-coordinate of this snake's body segment.
+            screen (Surface): The source Surface to display this snake's body segment.
+        """
         screen.blit(self.image_body, (x, y))
         
     def blit_head(self, x, y, screen):
+        """Display this snake's head.
+
+        Args:
+            x (int): x-coordinate of this snake's head.
+            y (int): y-coordinate of this snake's head.
+            screen (Surface): The source Surface to display this snake's head.
+        """
         if self.facing == "up":
             screen.blit(self.image_up, (x, y))
         elif self.facing == "down":
@@ -55,6 +77,20 @@ class Snake:
             screen.blit(self.image_right, (x, y))  
             
     def blit_tail(self, x, y, screen):
+        """Display this snake's tail.
+
+        Args:
+            x (int): x-coordinate of this snake's tail.
+            y (int): y-coordinate of this snake's tail.
+            screen (Surface): The source Surface to display this snake's tail.
+
+        Returns:
+            list[int]: The direction in which the snake's tail points towards.
+                        [0,-1] or [0, 27]: up
+                        [0, 1] or [0,-27]: down
+                        [-1,0] or [27, 0]: left
+                                           right otherwise.
+        """
         # second last - last segment
         # e.g. right [6,6] - [5,6] -> [1,0]
         #      up [6,5] - [6,6] -> [0,-1]
@@ -74,6 +110,12 @@ class Snake:
         return tail_direction
     
     def blit(self, rect_len, screen):
+        """Display specified object on screen.
+
+        Args:
+            rect_len (int): Sprite size.
+            screen (Surface): The source Surface to display the game objects.
+        """
         banner = self.settings.banner_height
         self.blit_head(self.segments[0][0]*rect_len, self.segments[0][1]*rect_len+banner, screen)                
         for position in self.segments[1:-1]:
@@ -82,6 +124,7 @@ class Snake:
             
     
     def update(self):
+        """Updates this snake's position on screen."""
         if self.facing == 'right':
             self.position[0] += 1
         if self.facing == 'left':
@@ -93,6 +136,11 @@ class Snake:
         
 class Strawberry():
     def __init__(self, settings):
+        """Constructor for the Strawberry class. Create a new strawberry.
+
+        Args:
+            settings (Settings): The settings for this game instance.
+        """
         self.settings = settings
         
         self.style = str(random.randint(1, 8))
@@ -101,6 +149,11 @@ class Strawberry():
         self.initialize()
         
     def random_pos(self, snake):
+        """Spawn this strawberry at a random position on the game map.
+
+        Args:
+            snake (Snake): The snake in this game instance.
+        """
         self.style = str(random.randint(1, 8))
         self.image = pygame.image.load('images/food' + str(self.style) + '.bmp')
         
@@ -114,6 +167,14 @@ class Strawberry():
             self.random_pos(snake)
 
     def blit(self, screen):
+        """Displays this strawberry on screen.
+
+        Args:
+            screen (Surface): The source Surface to display this strawberry.
+
+        Returns:
+            list[int]: This strawberry's position[x-coordinate,y-coordinate] on screen.
+        """
         if self.exist:
             x = self.position[0] * self.settings.rect_len
             y = self.position[1] * self.settings.rect_len + self.settings.banner_height
@@ -124,11 +185,17 @@ class Strawberry():
         self.exist = exist
    
     def initialize(self): #starting position
+        """Initialize this strawberry."""
         self.position = [15, 10]
 
 
 class PowerBerry():
     def __init__(self, settings):
+        """Constructor for the PowerBerry class. Create a new power-up berry.
+
+        Args:
+            settings (Settings): The settings for this game instance.
+        """
         self.settings = settings
         self.style = str(random.randint(1, 3))
         self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
@@ -137,6 +204,12 @@ class PowerBerry():
 
 
     def random_pos(self, snake):
+        """Spawn this power-up berry at a random position on the game map.
+
+        Args:
+            snake (Snake): The snake in this game instance.
+        """
+        self.style = str(random.randint(1, 4))
         self.style = str(random.randint(1, 3))
         self.image = pygame.image.load('images/power' + str(self.style) + '.bmp')
         self.exist = True
@@ -149,6 +222,14 @@ class PowerBerry():
             self.random_pos(snake)
 
     def blit(self, screen):
+        """Displays this spower-up berry on screen.
+
+        Args:
+            screen (Surface): The source Surface to display this power-up berry.
+
+        Returns:
+            list[int]: This power-up berry's position[x-coordinate,y-coordinate] on screen.
+        """
         if self.exist:
             x = self.position[0] * self.settings.rect_len
             y = self.position[1] * self.settings.rect_len + self.settings.banner_height
@@ -156,10 +237,16 @@ class PowerBerry():
             return [x, y]
 
     def remove(self):
+        """Move this power-up berry offscreen."""
         self.position = [-1,-1]
         self.exist = False
 
     def initialize(self, type):  # starting position TODO spawn timer
+        """Intialize this power-up berry.
+
+        Args:
+            type (string): The type of this power-up berry.
+        """
         self.position = [20, 15]
         self.berry_type = type
 
@@ -167,6 +254,7 @@ class PowerBerry():
 
 class Game:
     def __init__(self):
+        """Constructor of the Game class. Create a new game instance."""
         self.settings = Settings()
         self.snake = Snake(self.settings)
         self.strawberry = Strawberry(self.settings)
@@ -191,6 +279,7 @@ class Game:
                           3 : 'right'}       
         
     def restart_game(self):
+        """Restart the game. Reset snake and strawberry objects."""
         self.snake.initialize()
         self.strawberry.initialize()
 
@@ -211,10 +300,28 @@ class Game:
     #     return state
     
     def direction_to_int(self, direction):
+        """Finds the integer key of the direction from the pre-defined
+            movement dictionary.
+
+        Args:
+            direction (string): The specified direction.
+
+        Returns:
+            int: The key of the specified direction from the dictionary.
+        """
         direction_dict = {value : key for key,value in self.move_dict.items()}
         return direction_dict[direction]
         
     def do_move(self, move):
+        """Checks and updates the behaviours of all present game objects.
+
+        Args:
+            move (int): The integer key to get the corresponding direction
+                from the pre-defined movement dictionary.
+
+        Returns:
+            int: State check. 1 if the snake grows, 0 otherwise. -1 if game ends.
+        """
         move_dict = self.move_dict
         
         change_direction = move_dict[move]
@@ -235,7 +342,7 @@ class Game:
 
         if self.snake.position == self.strawberry.position: # snake eating strawberry
             pygame.mixer.Sound.play(pygame.mixer.Sound('./sound/eat.mp3'))
-            # star object +2, TODO:has timer of 5s
+            # star object +2
 
             if self.power_active["1"]:
                 self.snake.score += 1
@@ -292,6 +399,7 @@ class Game:
         return reward
     
     def check_wraparound(self):
+        """Updates the snake's position to the opposite side if it goes offscreen."""
         # right wall
         if self.snake.position[0] >= self.settings.width:
             self.snake.position[0] -= self.settings.width
@@ -306,6 +414,12 @@ class Game:
             self.snake.position[1] += self.settings.height
 
     def game_end(self):
+        """Check if this game ends.
+
+        Returns:
+            bool: `True` if the snake crashes into its body.
+                    `False` otherwise.
+        """
         end = False
         if self.lives == 0:
             end = True
@@ -317,6 +431,15 @@ class Game:
         return end
     
     def blit_score(self, color, screen):
+        """Displays the current score on screen.
+
+        Args:
+            color (Color): Score text color.
+            screen (Surface): The source Surface to display the score.
+
+        Returns:
+            string: The text string of the score.
+        """
         font = pygame.font.SysFont(None, 25)
         score_text = 'Score: ' + str(self.snake.score)
         text = font.render(score_text, True, color)
