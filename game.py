@@ -5,10 +5,6 @@ Created on Wed Apr 25 15:19:25 2018
 @author: zou
 """
 import pygame, random
-import numpy as np
-
-import game
-
 
 class Settings:
     def __init__(self):
@@ -241,7 +237,7 @@ class PowerBerry():
         self.position = [-1,-1]
         self.exist = False
 
-    def initialize(self, type):  # starting position TODO spawn timer
+    def initialize(self, type): 
         """Intialize this power-up berry.
 
         Args:
@@ -282,22 +278,6 @@ class Game:
         """Restart the game. Reset snake and strawberry objects."""
         self.snake.initialize()
         self.strawberry.initialize()
-
-    # uncomment if new implementation need to use states
-    
-    # def current_state(self):         
-    #     state = np.zeros((self.settings.width+2, self.settings.height+2, 2))
-    #     expand = [[0, 1], [0, -1], [-1, 0], [1, 0], [0, 2], [0, -2], [-2, 0], [2, 0]]
-        
-    #     for position in self.snake.segments:
-    #         state[position[1], position[0], 0] = 1
-        
-    #     state[:, :, 1] = -0.5        
-
-    #     state[self.strawberry.position[1], self.strawberry.position[0], 1] = 0.5
-    #     for d in expand:
-    #         state[self.strawberry.position[1]+d[0], self.strawberry.position[0]+d[1], 1] = 0.5
-    #     return state
     
     def direction_to_int(self, direction):
         """Finds the integer key of the direction from the pre-defined

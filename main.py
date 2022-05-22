@@ -7,10 +7,6 @@ Created on Wed May 16 15:22:20 2018
 
 import pygame
 import shelve
-import random
-import os
-import sys
-import time
 from pygame.locals import KEYDOWN, K_RIGHT, K_LEFT, K_UP, K_DOWN, K_ESCAPE
 from pygame.locals import QUIT
 
@@ -376,8 +372,6 @@ def game_loop(player, fps):
                     s.position = [-1, -1]  # move the position of the berry out of the way
             if game.powerberry.exist:  # delete the berry of it exists
                 game.powerberry.remove()
-
-        print(game.power_active)
 
         game.powerberry.blit(screen)
 
