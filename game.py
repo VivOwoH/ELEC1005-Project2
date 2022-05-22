@@ -236,7 +236,7 @@ class PowerBerry():
         self.position = [-1,-1]
         self.exist = False
 
-    def initialize(self, type): 
+    def initialize(self, type):  # starting position
         """Intialize this power-up berry.
 
         Args:
